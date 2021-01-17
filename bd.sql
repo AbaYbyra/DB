@@ -98,24 +98,28 @@ create table escola_professor(
 
 delimiter $
 
+drop trigger if exists abaybyra.trg_create_login_alunos;
+drop trigger if exists abaybyra.trg_create_login_profs;
+drop trigger if exists abaybyra.trg_create_login_escola;
+drop trigger if exists abaybyra.trg_validacao;
 create trigger trg_create_login_alunos after insert on alunos
 for each row
 	begin
-		insert into logins(email, senha, tipo)
+		insert into logins(email, senha, tipo_usuario)
 		values (new.email, new.senha, 'A');
 	end$
 
 create trigger trg_create_login_profs after insert on professores
 for each row
 	begin
-		insert into logins(email, senha, tipo)
+		insert into logins(email, senha, tipo_usuario)
 		values (new.email, new.senha, 'P');
 	end$
 
 create trigger trg_create_login_escola after insert on escolas
 for each row
 	begin
-		insert into logins(email, senha, tipo)
+		insert into logins(email, senha, tipo_usuario)
 		values (new.email, new.senha, 'E');
 	end$
 
@@ -124,7 +128,7 @@ create trigger trg_validacao after insert on escolas
 for each row
 	begin
 		update validacoes set status_cadastro = true 
-		where email = new.email;
+		where email_escola = new.email;
 	end$
 	
 delimiter ;
